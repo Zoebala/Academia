@@ -7,7 +7,7 @@
 <section class="content" style="width:100%;">
     <div class="container-fluid">
         <x-alertmessage />
-        
+
       <div class="row">
         <div class="col-12 col-sm-12">
           <div class="card card-primary card-outline card-outline-tabs">
@@ -52,16 +52,18 @@
                                   </div>
                                 </div>
                                 <!-- /.card-body -->
-                
-                                <div class="">
-                                  <x-savebtn />
+
+                                <div class="text-center">
+                                    <button  type="submit" class="btn btn-outline-primary rounded-pill" data-toggle="modal" data-target="#modal-default">
+                                        <i class="fas fa-plus"></i> Enregistrer
+                                     </button>
                                 </div>
                               </form>
-                              <div class="social-auth-links text-center mb-3"> 
+                              <div class="social-auth-links text-center mb-3">
                                 <a href="{{url('afficheSection')}}" class="btn btn-block btn-info font-italic">
                                     <i class="fas fa-file-alt me-2"></i> Liste des Sections
                                 </a>
-                                
+
                             </div>
                             </div>
                             <!-- /.card -->
@@ -98,15 +100,15 @@
                                     <input list="browsers" id="section" name="selectSection" class="form-control">
                                     <datalist id="browsers" id="exampleInputPassword1">
                                      @foreach ($Sections as $Section)
-                                         
+
                                      <option value="{{$Section->id}}">{{$Section->libSection}}</option>
                                      @endforeach
                                     </datalist>
                                   </div>
-                                  
+
                                 </div>
                                 <!-- /.card-body -->
-                
+
                                 <div class="text-center mb-3">
                                     <button  type="submit" class="btn btn-outline-primary rounded-pill" data-toggle="modal" data-target="#modal-default">
                                         <i class="fas fa-plus"></i> Enregistrer
@@ -157,7 +159,7 @@
                                   </div>
                                 </div>
                                 <!-- /.card-body -->
-                
+
                                 <div class="">
                                   <div class="text-center mb-3">
                                     <button  type="submit" class="btn btn-outline-primary rounded-pill">
@@ -202,12 +204,12 @@
                                       <option value="L1-LMD">L1-LMD</option>
                                       <option value="L2-LMD">L2-LMD</option>
                                       <option value="L3-LMD">L3-LMD</option>
-                                      <option value="L4-LMD">L4-LMD</option>                                      
+                                      <option value="L4-LMD">L4-LMD</option>
                                     </select>
                                   </div>
                                 </div>
                                 <!-- /.card-body -->
-                
+
                                 <div class="">
                                   <div class="text-center mb-3">
                                     <button  type="submit" class="btn btn-outline-primary rounded-pill">
@@ -234,10 +236,10 @@
           </div>
         </div>
       </div>
-      
+
       <!-- /.card -->
-   
+
     <!-- /.container-fluid -->
   </section>
-        
+
 @endsection

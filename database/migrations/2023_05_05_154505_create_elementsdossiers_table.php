@@ -24,13 +24,16 @@ class CreateElementsdossiersTable extends Migration
             $table->string("attestationBCVM")->nullable();
             $table->string("attestationNation")->nullable();
             $table->string("attestationStatut")->nullable();
-        
+            $table->string("profil1")->nullable();
+            $table->string("profil2")->nullable();
+            $table->string("profil3")->nullable();
+
             $table->unsignedBigInteger("etudiant_id");
             $table->foreign("etudiant_id")
             ->references("id")
             ->on("etudiants")
-            ->onDelete("cascade"); 
-           
+            ->onDelete("cascade");
+
             // $table->timestamps();
         });
     }

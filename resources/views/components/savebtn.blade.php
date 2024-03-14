@@ -1,6 +1,6 @@
 <div class="text-center">
 
-<button  type="button" class="btn btn-outline-light rounded-pill" data-toggle="modal" data-target="#modal-default">
+<button  type="button" class="btn btn-outline-dark rounded-pill" data-toggle="modal" data-target="#modal-default">
    <i class="fas fa-save"></i> Sauvegarder
 </button>
 <div class="modal fade" id="modal-default" >

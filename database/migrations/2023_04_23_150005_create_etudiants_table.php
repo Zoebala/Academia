@@ -15,7 +15,7 @@ class CreateEtudiantsTable extends Migration
     {
         Schema::create('etudiants', function (Blueprint $table) {
             $table->id();
-            $table->string("matricule",15);
+            $table->string("matricule",15)->nullable();
             $table->string("nom",25);
             $table->string("postnom",25);
             $table->string("prenom",25);
@@ -23,6 +23,9 @@ class CreateEtudiantsTable extends Migration
             $table->string("photo");
             $table->string("province",50)->nullable();
             $table->string("territoire",50)->nullable();
+            $table->string("territoireEcole",50)->nullable();
+            $table->string("adresseEcole",50)->nullable();
+            $table->string("ecole",50)->nullable();
             $table->string("optionSecondaire",50)->nullable();
             $table->date("datenais");
             $table->integer("pourcentage");
@@ -31,14 +34,14 @@ class CreateEtudiantsTable extends Migration
             $table->string("teletudiant",10);
             $table->string("teltutaire",25);
             $table->string("adresse",50);
-            $table->string("nationalite",20)->nullable();           
+            $table->string("nationalite",20)->nullable();
             $table->boolean("statut")->default(1);
             $table->unsignedBigInteger("user_id");
             $table->foreign("user_id")
             ->references("id")
             ->on("users");
             $table->timestamps();
-            
+
             // $table->timestamps();
         });
     }
