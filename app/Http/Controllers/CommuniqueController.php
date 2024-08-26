@@ -31,31 +31,31 @@ class CommuniqueController extends Controller
         ->select("id")
         ->first();
 
+
         //envoi d'un sms à l'étudiant choisi
-        $client = SMSClient::getInstance(config('orangemoney.client_id'), config('orangemoney.merchant_key')); 
-        $sms = new SMS($client);         
+        $client = SMSClient::getInstance('7ArJtMuNdAUmiLQGqAnAm5CoDeoWdRtN', 'AN4zirPjA01zVG34');
+        $sms = new SMS($client);
         $sms->to(Str::replaceFirst('0','+243',$req->telephone))
                 ->from('+243896071804','Academia')
-                ->message(strip_tags($req->contenu))                
+                ->message(strip_tags(html_entity_decode($req->contenu)))
                 ->send();
-
         //insertion du message dans la base de données
         Message::create([
-            "contenu"=>htmlspecialchars($req->contenu),
-            "etudiant_id"=>$etudiant_id,
+            "contenu"=>htmlspecialchars_decode($req->contenu),
+            "etudiant_id"=>(int)$etudiant_id->id,
             "created_at"=>now(),
-            "updated_at"=>now()            
+            "updated_at"=>now()
         ]);
-        return redirect()->with('msg',"message envoyé avec succès");
+        return redirect()->back()->with('msg',"message envoyé avec succès");
     }
 
-    
+
     public function createColMessage(Request $req){
         $req->validate([
             "etudiants"=>["required","min:1","max:3","int"],
             "contenu"=>"required|max:255|string",
         ]);
-        dd("salut");
+
         switch($req->etudiants){
             case 1://message à tous les étudiants
                 $TotalEtudiant=Etudiant::all()->count();
@@ -63,67 +63,68 @@ class CommuniqueController extends Controller
                 $i=0;
                 while($i < $TotalEtudiant){
                     //diffusion des sms à tous les étudiants
-                    $client = SMSClient::getInstance(config('orangemoney.client_id'), config('orangemoney.merchant_key')); 
-                    $sms = new SMS($client);         
+                    $client = SMSClient::getInstance('7ArJtMuNdAUmiLQGqAnAm5CoDeoWdRtN', 'AN4zirPjA01zVG34');
+                    $sms = new SMS($client);
                     $sms->to(Str::replaceFirst('0','+243',$Etudiant[$i]->teletudiant))
                     ->from('+243896071804','Academia')
-                    ->message(strip_tags($req->contenu))                
-                    ->send();                    
+                    ->message(strip_tags(html_entity_decode($req->contenu)))
+                    ->send();
                     $i++;
                 }
-                
+
                 // Instructions
                 break;
                 case 2://message aux étudiants ayant obtenu au moins 60%
-                    $TotalEtudiant=Etudiant::where("pourcentage",">=",60)->count();                    
+                    $TotalEtudiant=Etudiant::where("pourcentage",">=",60)->count();
                     $Etudiant=Etudiant::where("pourcentage",">=",60)
                     ->select("teletudiant")
-                    ->get();                    
+                    ->get();
                     $i=0;
                     while($i < $TotalEtudiant){
                         //diffusion des sms
-                        $client = SMSClient::getInstance(config('orangemoney.client_id'), config('orangemoney.merchant_key')); 
-                        $sms = new SMS($client);         
+                        $client = SMSClient::getInstance('7ArJtMuNdAUmiLQGqAnAm5CoDeoWdRtN', 'AN4zirPjA01zVG34');
+                        $sms = new SMS($client);
                         $sms->to(Str::replaceFirst('0','+243',$Etudiant[$i]->teletudiant))
                         ->from('+243896071804','Academia')
-                        ->message(strip_tags($req->contenu))                
-                        ->send();                    
+                        ->message(strip_tags(html_entity_decode($req->contenu)))
+                        ->send();
                         $i++;
-                    }                  
-                    
-                    
+                    }
+
+
                     break;
                     case 3://message aux étudiants ayant obtenu moins de 60%
-                        $TotalEtudiant=Etudiant::where("pourcentage","<",60)->count();                    
+                        $TotalEtudiant=Etudiant::where("pourcentage","<",60)->count();
                         $Etudiant=Etudiant::where("pourcentage","<",60)
                         ->select("teletudiant")
-                        ->get();                    
+                        ->get();
                         $i=0;
                         while($i < $TotalEtudiant){
                             //diffusion des sms
-                            $client = SMSClient::getInstance(config('orangemoney.client_id'), config('orangemoney.merchant_key')); 
-                            $sms = new SMS($client);         
+                            $client = SMSClient::getInstance('7ArJtMuNdAUmiLQGqAnAm5CoDeoWdRtN', 'AN4zirPjA01zVG34');
+                            $sms = new SMS($client);
                             $sms->to(Str::replaceFirst('0','+243',$Etudiant[$i]->teletudiant))
                             ->from('+243896071804','Academia')
-                            ->message(strip_tags($req->contenu))                
-                            ->send();                    
+                            ->message(strip_tags(html_entity_decode($req->contenu)))
+                            ->send();
                             $i++;
                         }
-                                        
+
             break;
             default:
                abort(404);
 
         }
 
-        
+
          //insertion du message dans la base de données
         //  Message::create([
-        //     "contenu"=>htmlspecialchars($req->contenu),            
+        //     "contenu"=>htmlspecialchars($req->contenu),
         //     "destinataire"=>$req->etudiants,
         //     "created_at"=>now(),
-        //     "updated_at"=>now()            
-        // ]);        
-        return redirect()->with('msg',"message envoyé avec succès");
+        //     "updated_at"=>now()
+        // ]);
+        return redirect()->back()->with('msg',"message envoyé avec succès");
     }
 }
+

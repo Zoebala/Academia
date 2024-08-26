@@ -25,11 +25,11 @@ class PayerController extends Controller
         $Etudiants=Etudiant::orderBy("id","desc")->get();
         $Frais=Typefrais::all();
         $Promotions=Promotion::all();
-        $Promo_id=Inscription::where("etudiant_id","=",$idEtudiant)        
+        $Promo_id=Inscription::where("etudiant_id","=",$idEtudiant)
         ->first();
         $Annees=Anneeacad::all();
-        
-        
+
+
         return view("pages.insertions.formPayement",compact("Etudiants","Frais","Promotions","Promo_id","Annees"));
     }
 
@@ -38,7 +38,7 @@ class PayerController extends Controller
        $Promotions=Promotion::all();
 
 
-       
+
 
         return view("pages.affichages.afficheListePayement",compact("Listes"));
     }
@@ -62,15 +62,15 @@ class PayerController extends Controller
         ->orderBy("etudiants.postnom","asc")
         ->orderBy("etudiants.prenom","asc")
         ->get();
-        
-        
+
+
         return view("pages.affichages.afficheListePayement",compact("Payements"));
     }
 
     public function create(Request $req){
-         
+
         $req->validate([
-            
+
             "montantPayer"=>"required|int|min:4",
             // "refPayer"=>"required|string|min:5|unique:payers",
             "etudiant_id"=>"required|string",
@@ -78,7 +78,7 @@ class PayerController extends Controller
             "promotion_id"=>["required","int",new ValidationPromotion($req->etudiant_id)],
             "annee_id"=>["required","int", new ValidationAnnee],
         ]);
-        
+
         //vérification de l'existance de l'étudiant dans la base de données!
         if(Frais::where("etudiant_id",$req->etudiant_id)
         ->where("promotion_id",$req->promotion_id)
@@ -98,10 +98,10 @@ class PayerController extends Controller
             ->where("promotion_id",$req->promotion_id)
             ->where("annee_id",$req->annee_id)
             ->first();
-            
-            
-            $Payer=Frais::find($Frais->id);    
-            //cumul des frais payé par l'étudiant 
+
+
+            $Payer=Frais::find($Frais->id);
+            //cumul des frais payé par l'étudiant
             $Payer->montantFrais +=$req->montantPayer;
             $Payer->motif="Frais";
             $Payer->update();
@@ -114,11 +114,11 @@ class PayerController extends Controller
               $Tranche->frais_id=$Frais->id;
               $Tranche->save();
 
-          
+
 
         }else{
             //Insertion Frais
-            
+
             $Payer=new Frais;
             $Payer->created_at=now();
             $Payer->montantFrais=$req->montantPayer;
@@ -127,7 +127,7 @@ class PayerController extends Controller
             $Payer->motif=strip_tags($req->motif);
             $Payer->etudiant_id=$req->etudiant_id;
             $Payer->promotion_id=$req->promotion_id;
-            
+
             $Payer->save();
             //récupération id frais payé
             $Frais_id=Frais::where("etudiant_id",$req->etudiant_id)
@@ -136,7 +136,7 @@ class PayerController extends Controller
             ->where("created_at",$Payer->created_at)
             ->where("motif",$req->motif)
             ->first();
-    
+
             //Insertions Tranche
             $Tranche= new Tranchepay;
             $Tranche->libTranche=strip_tags($req->motif);
@@ -145,7 +145,7 @@ class PayerController extends Controller
             $Tranche->frais_id=$Frais_id->id;
             $Tranche->save();
         }
-        
+
 
         $Etudiant=Etudiant::where("id",$req->etudiant_id)->first();
 
@@ -159,7 +159,7 @@ class PayerController extends Controller
         ->select(["libOption","libDepartement"])
         ->where("etudiants.id",$req->etudiant_id)
         ->first();
-        
+
         // dd('Terminez l\'opération de payement et sms avec orange');
         //payement avec orange money
         // $payment = new OrangeMoney();
@@ -175,30 +175,30 @@ class PayerController extends Controller
         //     "lang"=> "fr",
         //     "reference"=>  $Payer->refPayer
         // ];
-        
+
         // $payment->webPayment($data);
         //Notification par sms
         // $client = SMSClient::getInstance('<client_id>', '<client_secret>');
 
         // Envoi sms au candidat
-        $client = SMSClient::getInstance('cY5AFSJ7vbynb1pjBoTXTHAzC1prnAVb', 'caCQuErVkeOKAubk'); 
-        $sms = new SMS($client);   
-        
+        $client = SMSClient::getInstance('7ArJtMuNdAUmiLQGqAnAm5CoDeoWdRtN', 'AN4zirPjA01zVG34');
+        $sms = new SMS($client);
+
         $response = $sms->to(Str::replaceFirst('0','+243',$Etudiant->teletudiant))
                 ->from('+243896071804','Academia')
-                ->message( 'Félicitations '.$Etudiant->nom.' '.$Etudiant->postnom.' '.$Etudiant->prenom .', Vous venez de prendre votre inscription à l\'Institut Supérieur Pédagogique de 
+                ->message( 'Félicitations '.$Etudiant->nom.' '.$Etudiant->postnom.' '.$Etudiant->prenom .', Vous venez de prendre votre inscription à l\'Institut Supérieur Pédagogique de
                 Mbanza-Ngungu, option choisie : '.$Option->libOption.' - departement : '.$Option->libDepartement)
                 // ->senderName(config('app.name'))
                 ->send();
-        
-        
+
+
         //return $req->all(); RTF2881
         $Etudiant=Etudiant::where("id",$req->etudiant_id)->first();
-        
+
         $req->session()->flash("msg",'Payement effectué avec succès '.$Etudiant->nom.' '.$Etudiant->postnom.'!');
         return redirect("accueil");
 
-        
+
     }
     //Suppression payement
     public function deletePayer(Frais $id){
@@ -207,10 +207,10 @@ class PayerController extends Controller
     }
     //affichage des données avant modification
     public function showData(Frais $payement){
-        
+
         $Etudiants=Etudiant::find($payement->etudiant_id);
         $TranchePayement=Tranchepay::find($payement->tranche_id);
-     
+
         $Tranches=Tranchepay::all();
 
         return view("pages.modifications.editerPayement",compact("payement","Etudiants","Tranches","TranchePayement"));
@@ -219,20 +219,20 @@ class PayerController extends Controller
 
     public function updatePayement(Request $req){
         $req->validate([
-            
+
             "montantPayer"=>"required|int|min:4",
             "refPayer"=>"required|string|min:5",
             "etudiant_id"=>"required|string",
             "IdTranche"=>"required|int",
-            "payer_id"=>"required|int",            
+            "payer_id"=>"required|int",
         ]);
 
-        $Payer=Frais::find($req->payer_id);        
+        $Payer=Frais::find($req->payer_id);
         $Payer->montantPayer=$req->montantPayer;
         $Payer->refPayer=$req->refPayer;
         $Payer->etudiant_id=$req->etudiant_id;
         $Payer->tranche_Id=$req->IdTranche;
-        $Payer->update();        
+        $Payer->update();
         return redirect("afficherListePayement")->with('msg',"Modification effectuée avec succès!");
     }
 }

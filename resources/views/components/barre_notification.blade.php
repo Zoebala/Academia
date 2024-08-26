@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\DB;
         ->join("frais","frais.etudiant_id","=","etudiants.id")
         ->join("options","inscriptions.option_id","=","options.id")
         ->Where("statut",1)
-        ->count();            
-      
+        ->count();
+
 @endphp
 
  <a class="nav-link" data-toggle="dropdown" href="#" title="Notifications">
@@ -32,13 +32,13 @@ use Illuminate\Support\Facades\DB;
   <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
     <div class="bg-dark text-white  p-1"> <span class="ml-5"><i class="fas fa-users"></i> Nouveaux Inscrits</span></div>
     <div class="dropdown-divider"></div>
-    
-            @if ($NbreNewInscrits >0)  
+
+            @if ($NbreNewInscrits >0)
                 @php
                     $i=1;
-                @endphp        
+                @endphp
                 @foreach ($NewInscrits as $candidat)
-                    
+
                     <a href="{{url('page_notification/'.$candidat->etudiant_id)}}" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
@@ -49,21 +49,21 @@ use Illuminate\Support\Facades\DB;
                             <span class="float-right text-sm text-danger"><i class="fas fa-folder"></i></span>
                         </h3>
                         <p class="text-sm">{{$candidat->libOption}}</p>
-                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>{{date("d/m/Y h:i:s",strtotime($candidat->dateInscrit))}}</p>
+                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>{{date("d/m/Y H:i:s",strtotime($candidat->dateInscrit))}}</p>
                         </div>
                     </div>
                     <!-- Message End -->
-                    </a>                       
-                        
+                    </a>
+
                 @endforeach
-            @else 
+            @else
                     <div class="bg-info p-2 d-flex justify-content-center"> <small class="">Aucune nouvelle notification trouvée.</small></div>
             @endif
             @if ($NbreNewInscrits>=4)
                 <div class="p-1 bg-primary d-flex justify-content-center"><span>...</span></div>
                 <div class="dropdown-divider"></div>
-                
-                
+
+
             <a href="{{url('page_notification')}}" class="dropdown-item dropdown-footer"> <i class="fas fa-eye"></i> Voir toutes les notifications</a>
             @endif
   </div>
