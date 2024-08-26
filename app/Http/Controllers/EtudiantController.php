@@ -43,8 +43,8 @@ class EtudiantController extends Controller
             "user_id"=>["required","int","unique:etudiants"]
 
         ]);
-       
-        
+
+
         $Etudiant=new Etudiant;
         $Etudiant->nom=strip_tags($req->nom);
         $Etudiant->province=strip_tags($req->province);
@@ -60,11 +60,11 @@ class EtudiantController extends Controller
         $Etudiant->nompere=strip_tags($req->nompere);
         $Etudiant->nommere=strip_tags($req->nommere);
         $Etudiant->nationalite=strip_tags($req->nationalite);
-        $Etudiant->pourcentage=strip_tags($req->pourcent);    
-        
+        $Etudiant->pourcentage=strip_tags($req->pourcent);
+
         $Etudiant->teletudiant=strip_tags($req->teletudiant);
         $Etudiant->user_id=strip_tags($req->user_id);
-       
+
         $Etudiant->teltutaire=strip_tags($req->teltutaire);
         if($req->hasfile("photo")){
             $file=$req->file("photo");
@@ -79,17 +79,17 @@ class EtudiantController extends Controller
         $num=Etudiant::where("teletudiant",$req->teletudiant)
         ->select("id")
         ->get();
-        $Etudiant->matricule=date("Y").'/'.$num[0]->id; 
+        $Etudiant->matricule=date("Y").'/'.$num[0]->id;
         $Etudiant->update();
-        $req->session()->flash("msg","Enregistrement effectué avec succès!");        
-        
-        //redirection et chargement des données de la page optionpage      
+        $req->session()->flash("msg","Enregistrement effectué avec succès!");
+
+        //redirection et chargement des données de la page optionpage
         if(null == session("Etudiant")){
             $req->session()->put("IdEtudiant",$num[0]->id);
             $req->session()->put("Etudiant",$req->nom." ".$req->postnom);
             $req->session()->put("photo",$Etudiant->photo);
         }
-        
+
         $Sections=Section::all();
         $Options=DB::table("options")
         ->join("departements","departements.id","=","options.depart_id")
@@ -144,12 +144,12 @@ class EtudiantController extends Controller
             "adresseEcole"=>["required","string","max:50"],
         ]);
         $Etudiant=Etudiant::find($req->idEtud);
-        $Etudiant->nom=strip_tags($req->nom);       
+        $Etudiant->nom=strip_tags($req->nom);
         $Etudiant->province=strip_tags($req->province);
         $Etudiant->territoire=strip_tags($req->territoire);
         $Etudiant->territoireEcole=strip_tags($req->territoireEcole);
         $Etudiant->adresseEcole=strip_tags($req->adresseEcole);
-        $Etudiant->optionSecondaire=strip_tags($req->option);       
+        $Etudiant->optionSecondaire=strip_tags($req->option);
         $Etudiant->postnom=strip_tags($req->postnom);
         $Etudiant->prenom=strip_tags($req->prenom);
         $Etudiant->sexe=strip_tags($req->sexe);
@@ -158,9 +158,9 @@ class EtudiantController extends Controller
         $Etudiant->nommere=strip_tags($req->nommere);
         $Etudiant->ecole=strip_tags($req->ecole);
         $Etudiant->nationalite=strip_tags($req->nationalite);
-        $Etudiant->pourcentage=strip_tags($req->pourcent);    
-        
-       
+        $Etudiant->pourcentage=strip_tags($req->pourcent);
+
+
         $Etudiant->teltutaire=strip_tags($req->teltutaire);
         if($req->hasfile("photo")){
             //vérification et suppression de l'ancienne photo si celle-ci existe
@@ -185,13 +185,13 @@ class EtudiantController extends Controller
         ->where("etudiants.id",$req->idEtud)
         ->first();
         //Notification par sms
-        
-        // $tel=str_replace('0','+243',$Etudiant->teletudiant); 
+
+        // $tel=str_replace('0','+243',$Etudiant->teletudiant);
         // dd(config('orangemoney.client_id'));
         // dd(config('orangemoney.merchant_key'));
-        
-        // $client = SMSClient::getInstance(config('orangemoney.client_id'), config('orangemoney.merchant_key')); 
-        // $sms = new SMS($client);   
+
+        // $client = SMSClient::getInstance(config('orangemoney.client_id'), config('orangemoney.merchant_key'));
+        // $sms = new SMS($client);
         // $response = $sms->to(Str::replaceFirst('0','+243',$Etudiant->teletudiant))
         //         ->from('+243896071804', config('app.name'))
         //         ->message( $Etudiant->nom.' '.$Etudiant->postnom.' '.$Etudiant->prenom .' Vous venez de modifier vos inforamtions d\'inscription, option : '.$Option->libOption.' - departement : '.$Option->libDepartement)
@@ -199,8 +199,8 @@ class EtudiantController extends Controller
             // checking SMS statistics
              // with optional country code filter
             // and optional appID filter
-            //  $response = $sms->statistics('<country_code>', '<app_id>');      
-       
+            //  $response = $sms->statistics('<country_code>', '<app_id>');
+
         $req->session()->flash("msg","Modification effectuée avec succès!");
         if(Auth::user()->admin==1){
 
@@ -220,8 +220,8 @@ class EtudiantController extends Controller
             }
 
         }
-       
-        
+
+
 
     }
 
@@ -246,7 +246,7 @@ class EtudiantController extends Controller
         ->join("inscriptions","inscriptions.option_id","=","options.id")
         ->where("etudiant_id",$Etudiant->id)
         ->first();
-        
+
         // $ElementDossier= DB::table("elementsdossiers")
         // ->join("etudiants","etudiants.id","=","Elementsdossiers.etudiant_id")
         // ->join("payers","payers.etudiant_id","=","etudiants.id")
@@ -255,7 +255,7 @@ class EtudiantController extends Controller
         // ->select(["anneeacads.*","elementsdossiers.*"])
         // ->first();
         // dd($ElementDossier);
-        
+
         return view("pages.affichages.accueilEtudiantInscrit",compact("Etudiant_id","idOption"));
     }
 
@@ -266,7 +266,7 @@ class EtudiantController extends Controller
         ->join("frais","frais.etudiant_id","=","etudiants.id")
         ->join("options","inscriptions.option_id","=","options.id")
         ->select(["etudiants.*","options.*","frais.created_at as dateInscription","etudiants.id as etudiant_id","etudiants.photo as Etud_photo"])
-            
+
         ->orderBy("inscriptions.etudiant_id","desc")
         ->get();
         $Annee=Anneeacad::first();
@@ -275,13 +275,35 @@ class EtudiantController extends Controller
         return view("pages.affichages.detailEtudiant",compact("NewInscrits","Annee"));
     }
 
+    public function notification($id){
+
+        $NewInscrits=DB::table("etudiants")
+        ->join("inscriptions","inscriptions.etudiant_id","=","etudiants.id")
+        ->join("frais","frais.etudiant_id","=","etudiants.id")
+        ->join("options","inscriptions.option_id","=","options.id")
+        ->select(["etudiants.*","options.*","frais.created_at as dateInscription","etudiants.id as etudiant_id","etudiants.photo as Etud_photo"])
+        ->where('etudiants.id',$id)
+        ->orderBy("inscriptions.etudiant_id","desc")
+        ->get();
+        $Annee=Anneeacad::first();
+
+
+        //mise à jour dans la table étudiant pour notification lue
+        Etudiant::where("id",$id)
+                ->update([
+                    "statut" =>0,
+                ]);
+
+
+        return view("pages.affichages.detailEtudiant",compact("NewInscrits","Annee"));
+    }
     public function PourcentageInf(){
         $NewInscrits=DB::table("etudiants")
         ->join("inscriptions","inscriptions.etudiant_id","=","etudiants.id")
         ->join("frais","frais.etudiant_id","=","etudiants.id")
         ->join("options","inscriptions.option_id","=","options.id")
         ->select(["etudiants.*","options.*","frais.created_at as dateInscription","etudiants.id as etudiant_id","etudiants.photo as Etud_photo"])
-        ->where('pourcentage','<',60)        
+        ->where('pourcentage','<',60)
         ->orderBy("inscriptions.etudiant_id","desc")
         ->get();
         $Annee=Anneeacad::first();
@@ -295,7 +317,7 @@ class EtudiantController extends Controller
         ->join("frais","frais.etudiant_id","=","etudiants.id")
         ->join("options","inscriptions.option_id","=","options.id")
         ->select(["etudiants.*","options.*","frais.created_at as dateInscription","etudiants.id as etudiant_id","etudiants.photo as Etud_photo"])
-        ->where('pourcentage','>=',60)        
+        ->where('pourcentage','>=',60)
         ->orderBy("inscriptions.etudiant_id","desc")
         ->get();
         $Annee=Anneeacad::first();

@@ -36,14 +36,15 @@ Route::middleware("isAdmin")->group(function(){
     Route::get("EtudiantInscrit",[EtudiantController::class,"DetailEtudiant"]);
     Route::get("PourcentageInf",[EtudiantController::class,"PourcentageInf"]);
     Route::get("PourcentageSup",[EtudiantController::class,"PourcentageSup"]);
+    Route::get("page_notification/{id}",[EtudiantController::class,"notification"]);
 
 });
 Route::middleware("isUser")->group(function(){
-    
+
     // Route Dossier Etudiant
     Route::get("formUploadFiles/{idEtudiant}/{idOption}",[ElementsdossierController::class,"index"]);
     Route::post("DossierEtudiant",[ElementsdossierController::class,"create"])->name("insertdossier");
-    
+
 });
 Route::post("updateDossierEtudiant",[ElementsdossierController::class,"updateDossier"]);
 Route::get("editerDossierEtudiant/{idEtudiant}/{idOption}",[ElementsdossierController::class,"editer"]);
@@ -54,7 +55,7 @@ Route::get("editerDossierEtudiant/{idEtudiant}/{idOption}",[ElementsdossierContr
 //middleware de group pour administrateur
 Route::middleware("isAdmin")->group(function(){
     //Route inscription Admin
-    
+
     Route::get("inscription_admin",[InscriptionAdminController::class,"index"])->name("inscription_admin")->middleware("isAdmin");
     Route::post("inscription_admin_create",[InscriptionAdminController::class,"create"])->name("inscription_admin_create")->middleware("isAdmin");
 
@@ -88,15 +89,15 @@ Route::get("optionpage",[OptionPage::class,"loadData"]);
 Route::get("formPayement/{idEtudiant}",[PayerController::class,"index"])->name("formPayement");
 Route::post("insertPayement",[PayerController::class,"create"])->name("insertPayement");
 // Middleware de group pour utilisateur authentifié
-Route::middleware("isAdmin")->group(function(){     
+Route::middleware("isAdmin")->group(function(){
     // Routes Départements
     Route::get("afficheDepart",[DepartementController::class,"showData"]);
     Route::post("InsertDepart",[DepartementController::class,"insertDepartData"]);
     Route::get("editDepart/{id}",[DepartementController::class,"editerDep"]);
     Route::post("updateDepartement",[DepartementController::class,"updateDepart"]);
     Route::get("deleteDepart/{id}",[DepartementController::class,"deleteDepart"]);
-    
-    
+
+
 // Routes Section
 Route::middleware("isAdmin")->group(function(){
 
@@ -121,7 +122,7 @@ Route::middleware("isAdmin")->group(function(){
     Route::post("updatePayement",[PayerController::class,"updatePayement"]);
     Route::get("afficherPromoPayer",[PayerController::class,"afficherPromoPayer"]);
     Route::get("promoPayerId/{id}",[PayerController::class,"promoPayer"]);
-    
+
 });
 // Routes Candidats Test
 Route::view("candidatTest","pages.affichages.afficheCandidatTest")->name("candidatTest");
@@ -132,7 +133,7 @@ Route::view("appartenanceEtudiant","pages.affichages.afficheAppartenanceEtudiant
 Route::get("formTranche",[TranchepayController::class,"index"])->name("formTranche");
 
 Route::middleware("isAdmin")->group(function(){
-    
+
     //Route pour Tranche
     Route::post("createTranche",[TranchepayController::class,"create"])->name("createTranche");
     Route::get("AfficherListeTranche",[TranchepayController::class,"AfficherListe"])->name("AfficherListeTranche");
